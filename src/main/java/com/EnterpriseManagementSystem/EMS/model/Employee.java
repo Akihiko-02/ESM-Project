@@ -30,6 +30,8 @@ public class Employee {
     private String password;
     @Column(name = "employee_contact", nullable = false, unique = true)
     private String contact;
+    @Column(name = "acc_status",nullable = false)
+    private String accountstatus;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
     private List<Leave> leave;
@@ -38,6 +40,22 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Manager manager;
+
+    public String getAccountstatus() {
+        return accountstatus;
+    }
+
+    public void setAccountstatus(String accountstatus) {
+        this.accountstatus = accountstatus;
+    }
+
+    public Manager getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
 
     public long getId() {
         return Id;
@@ -157,8 +175,10 @@ public class Employee {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", contact='" + contact + '\'' +
+                ", accountstatus='" + accountstatus + '\'' +
                 ", leave=" + leave +
                 ", duty=" + duty +
+                ", manager=" + manager +
                 '}';
     }
 }
