@@ -2,6 +2,7 @@ package com.EnterpriseManagementSystem.EMS.services;
 
 import com.EnterpriseManagementSystem.EMS.model.*;
 import com.EnterpriseManagementSystem.EMS.repository.AdminRepository;
+import com.EnterpriseManagementSystem.EMS.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     private AdminRepository adminRepository;
-
+    @Autowired
+    private ManagerRepository managerRepository;
     @Override
     public Admin checkadminlogin(String username, String password) {
         return adminRepository.findByUsernameandPassword(username,password);
@@ -21,7 +23,16 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public Manager addManager(Manager manager) {
-        return null;
+
+        long manager_id = generateRandomMangaerId();
+        String randompassword = generateRandomPassword(8);
+        manager.setId(manager_id);
+        manager.setPassword(randompassword);
+        Manager savedManager = managerRepository.save(manager);
+        String subject = "Welcome Manager to EMS";
+        String body = "Hi "+ manager.getName() +
+                "\n\n You have been Successfully added \n\n ManagerID: "+ manager.getId()+
+                "Here is your username: "+manager.getUsername()+"\n Password: "+ manager.getPassword();
     }
 
     @Override

@@ -11,7 +11,9 @@ public class Manager {
     @Id
     @Column(name = "manager_id")
     private Long id;
-    @Column(name = "manager_name", nullable = false, unique = true)
+    @Column(name = "manager_name", nullable = false)
+    private String name;
+    @Column(name = "manager_username", nullable = false, unique = true)
     private String username;
     @Column(name = "manager_password", nullable = false)
     private String password;
@@ -31,6 +33,7 @@ public class Manager {
     public String toString() {
         return "Manager{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
@@ -39,6 +42,14 @@ public class Manager {
                 ", employees=" + employees +
                 ", dutiesAssigned=" + dutiesAssigned +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {
