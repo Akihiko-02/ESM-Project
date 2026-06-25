@@ -75,6 +75,7 @@ public class AdminServiceImpl implements AdminService{
     }
     private String generateRandomPassword(int length){
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        System.out.println("test");
         String lower = upper.toLowerCase();
         String number = "0123456789";
         String special = "!@#$%^&*()_+";
