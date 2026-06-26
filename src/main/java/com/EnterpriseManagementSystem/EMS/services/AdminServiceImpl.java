@@ -1,12 +1,12 @@
 package com.EnterpriseManagementSystem.EMS.services;
 
 import com.EnterpriseManagementSystem.EMS.model.*;
-import com.EnterpriseManagementSystem.EMS.repository.AdminRepository;
-import com.EnterpriseManagementSystem.EMS.repository.ManagerRepository;
+import com.EnterpriseManagementSystem.EMS.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -16,6 +16,16 @@ public class AdminServiceImpl implements AdminService{
     private AdminRepository adminRepository;
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private EmailRepository emailRepository;
+    @Autowired
+    private LeaveRepository leaveRepository;
+
+
     @Override
     public Admin checkadminlogin(String username, String password) {
         return adminRepository.findByUsernameandPassword(username,password);
@@ -29,55 +39,73 @@ public class AdminServiceImpl implements AdminService{
         manager.setId(manager_id);
         manager.setPassword(randompassword);
         Manager savedManager = managerRepository.save(manager);
-        String subject = "Welcome Manager to EMS";
-        String body = "Hi "+ manager.getName() +
+        Email e = new Email();
+        e.setRecipient(manager.getEmail());
+        e.setSubject("Welcome Manger to EMS");
+        e.setMessage("Hi "+ manager.getName() +
                 "\n\n You have been Successfully added \n\n ManagerID: "+ manager.getId()+
-                "Here is your username: "+manager.getUsername()+"\n Password: "+ manager.getPassword();
+                "Here is your username: "+manager.getUsername()+"\n Password: "+ manager.getPassword());
+        emailRepository.save(e);
+        emailService.sentEmail(e.getRecipient(),e.getSubject(),e.getMessage());
+        return savedManager;
     }
 
     @Override
     public List<Manager> viewAllManagers() {
-        return List.of();
+        return managerRepository.findAll();
     }
 
     @Override
-    public String deleteManager() {
-        return "";
+    public String deleteManager(Long mid) {
+       Optional<Manager> manager = managerRepository.findById(mid);
+       if(manager.isPresent()){
+           managerRepository.deleteById(mid);
+           return "Manager Deleted Successfully...";
+       }else{
+           return "Manager ID not Found";
+       }
     }
 
     @Override
     public List<Employee> viewAllEmployees() {
-        return List.of();
+        return employeeRepository.findAll();
     }
 
     @Override
-    public String deleteEmployee() {
-        return "";
+    public String deleteEmployee(Long eid) {
+        Optional<Employee> employee = employeeRepository.findById(eid);
+        if(employee.isPresent()){
+            employeeRepository.deleteById(eid);
+            return "Employee Deleted Successfully...";
+        }else{
+            return "Employee ID not Found";
+        }
     }
 
     @Override
     public long managercount() {
-        return 0;
+        return managerRepository.count();
     }
 
     @Override
     public long employeecount() {
-        return 0;
+        return employeeRepository.count();
     }
 
-    @Override
-    public String assigndutyToManager(Duty duty, int managerid) {
-        return "";
-    }
-
-    @Override
-    public String assigndutyToEmployee(Duty duty, int employeeid) {
-        return "";
-    }
+//    @Override
+//    public String assigndutyToManager(Duty duty, Long managerid) {
+//        Optional<Manager> manager = managerRepository.findById(managerid);
+//
+//    }
+//
+//    @Override
+//    public String assigndutyToEmployee(Duty duty, int employeeid) {
+//        return "";
+//    }
 
     @Override
     public List<Leave> viewAllLeaveApplications() {
-        return List.of();
+        return leaveRepository.findAll();
     }
 
     private int generateRandomMangaerId(){

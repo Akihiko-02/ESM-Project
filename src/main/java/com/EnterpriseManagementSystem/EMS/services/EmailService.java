@@ -15,7 +15,7 @@ public class EmailService {
     private JavaMailSender mailSender;
     @Autowired
     private EmailRepository emailRepository;
-    private void sentEmail(String to,String subject,String body){
+    public void sentEmail(String to,String subject,String body){
         Email e = new Email();
         e.setRecipient(to);
         e.setSubject(subject);
